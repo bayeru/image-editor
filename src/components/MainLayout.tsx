@@ -8,6 +8,9 @@ import {
 import BurstModeIcon from "@mui/icons-material/BurstMode";
 import { Outlet } from "react-router-dom";
 
+/**
+ * Main layout for the application. Includes the app bar and the <Outlet /> for the react router.
+ */
 export default function MainLayout() {
 	return (
 		<>
