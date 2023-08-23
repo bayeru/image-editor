@@ -1,7 +1,8 @@
-import { Link, LoaderFunctionArgs, redirect, useLoaderData, useSearchParams } from "react-router-dom";
+import { LoaderFunctionArgs, redirect, useLoaderData, useSearchParams } from "react-router-dom";
 import { Image } from "@/common/types";
 import ImageList from "@/components/ImageList";
-import { Container, Pagination, PaginationItem, Stack } from "@mui/material";
+import { Container } from "@mui/material";
+import Pagination from "@/components/Pagination";
 
 // This function provides the data to our page
 export const loader = async ({ request }:LoaderFunctionArgs) => {
@@ -34,17 +35,7 @@ export default function Home() {
 			}}
 		>
 			<ImageList images={images} />
-			<Stack spacing={2} alignItems="center" marginTop={8}>
-				<Pagination page={page} count={10} variant="outlined" shape="rounded" size="large" renderItem={(item) => {
-					return (
-						<PaginationItem
-							component={Link}
-							to={`/images?page=${item.page}`}
-							{...item}
-						/>
-					);
-				}}/>
-			</Stack>
+			<Pagination page={page} />			
 		</Container>
 	);
 }
