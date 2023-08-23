@@ -14,7 +14,7 @@ import {loader as homeLoader} from "./pages/Home";
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route path="/" element={<MainLayout />}>
-			<Route path="/" element={<Navigate to="/images" replace={true} />} />
+			<Route path="/" element={<Navigate to="/images?page=1" replace={true} />} />
 			<Route path="/images" element={<Home />} loader={homeLoader}/>
 			<Route path="/images/:imageId/edit" element={<Editor />} />
 		</Route>
