@@ -12,12 +12,14 @@ interface ImageListProps {
 
 export default function ImageList({ images }: ImageListProps) {
 	return (
-		<MuiImageList cols={3} sx={{ overflow: "hidden" }}>
+		<MuiImageList cols={3} gap={16} sx={{ overflow: "hidden" }}>
 			{images.map((item) => (
 				<ImageListItem
 					key={item.id}
 					sx={{
 						cursor: "pointer",
+						borderRadius: 2,
+						overflow: "hidden"
 					}}
 				>
 					<img
@@ -26,18 +28,22 @@ export default function ImageList({ images }: ImageListProps) {
 						alt={item.author}
 						loading="lazy"
 					/>
-					<ImageListItemBar
+					<ImageListItemBar						
 						sx={{
 							background:
-								"linear-gradient(to top, rgba(0,0,0,0.7) 0%, " +
-								"rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.2) 100%)",
+								"linear-gradient(to top, rgba(1,1,1,0.7) 0%, " +
+								"rgba(1,1,1,0.3) 70%, rgba(1, 1, 1, 0) 100%)",
 							"& .MuiImageListItemBar-titleWrap": {
 								display: "flex",
 								justifyContent: "space-between",
 								alignItems: "center",
 							},
+							"& .MuiImageListItemBar-title": {
+								fontSize: "1.2rem",
+							},							
 							"& .MuiImageListItemBar-subtitle": {
 								fontSize: "1rem",
+								opacity: "0.7"
 							},
 						}}
 						title={item.author}
