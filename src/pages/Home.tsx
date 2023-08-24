@@ -1,5 +1,5 @@
 import { LoaderFunctionArgs, redirect, useLoaderData, useSearchParams } from "react-router-dom";
-import { Image } from "@/common/types";
+import { PicsumImage } from "@/common/types";
 import ImageList from "@/components/ImageList";
 import { Container } from "@mui/material";
 import Pagination from "@/components/Pagination";
@@ -21,7 +21,7 @@ export const loader = async ({ request }:LoaderFunctionArgs) => {
 
 export default function Home() {
 
-	const images = (useLoaderData() as Image[]) || [];
+	const images = (useLoaderData() as PicsumImage[]) || [];
 	const [searchParams] = useSearchParams();
 	const page = Number(searchParams.get('page'));
 	console.log("Images", images, "Page", page);

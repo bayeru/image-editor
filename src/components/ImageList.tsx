@@ -4,11 +4,11 @@ import {
 	ImageListItem,
 	ImageListItemBar,
 } from "@mui/material";
-import { Image } from "@/common/types";
+import { PicsumImage } from "@/common/types";
 import { Link } from "react-router-dom";
 
 interface ImageListProps {
-	images: Image[];
+	images: PicsumImage[];
 }
 
 export default function ImageList({ images }: ImageListProps) {
