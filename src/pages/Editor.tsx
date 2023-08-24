@@ -176,6 +176,8 @@ export default function Editor() {
 							color: "#252525",
 						}}
 						title="Download"
+						href={imageUrl}
+						download
 					>
 						<DownloadIcon />
 					</IconButton>
