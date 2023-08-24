@@ -18,16 +18,17 @@ import { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
 
 export default function Editor() {
-	// Get params from the URL
-	const params = useParams();
-	const imageId = params.imageId;
-	const [loading, setLoading] = useState(false);
-	const [imageState, setImageState] = useState({
+	const defaultState = {
 		width: 750,
 		height: 500,
 		greyscale: false,
 		blur: 0,
-	});
+	};
+
+	const params = useParams();
+	const imageId = params.imageId;
+	const [loading, setLoading] = useState(false);
+	const [imageState, setImageState] = useState(defaultState);
 
 	useEffect(() => {
 		const url = buildImageUrl();
@@ -107,6 +108,10 @@ export default function Editor() {
 		});
 	};
 
+	const handleReset = () => {
+		setImageState(defaultState);
+	};
+
 	return (
 		<Container
 			maxWidth={"lg"}
@@ -166,6 +171,7 @@ export default function Editor() {
 							marginRight: 1,
 						}}
 						title="Reset"
+						onClick={handleReset}
 					>
 						<RestartAltIcon />
 					</IconButton>
