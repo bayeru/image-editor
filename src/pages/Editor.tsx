@@ -220,7 +220,7 @@ export default function Editor() {
 							onChange={handleHeightChange}
 						/>
 						<FormControlLabel
-							control={<Switch onChange={handleGreyscaleChange} />}
+							control={<Switch checked={imageState.greyscale} onChange={handleGreyscaleChange} />}
 							label="Greyscale"
 						/>
 						<Box>
