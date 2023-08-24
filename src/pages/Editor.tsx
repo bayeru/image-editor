@@ -132,35 +132,31 @@ export default function Editor() {
 			>
 				<Box
 					sx={{
+						position: "relative",
 						width: "750px",
 						height: "500px",
+						overflow: "overlay",
+						backgroundColor: "#eee"
 					}}
 				>
-					<Box
-						sx={{
-							position: "relative",
-							width: imageState.width,
-							height: imageState.height,
-						}}
-					>
-						{loading && (
-							<CircularProgress
-								sx={{
-									position: "absolute",
-									top: "50%",
-									left: "50%",
-									marginTop: "-20px",
-									marginLeft: "-20px",
-								}}
-							/>
-						)}
-						<img
-							src={imageUrl}
-							style={{
-								opacity: loading ? 0.3 : 1,
+					{loading && (
+						<CircularProgress
+							sx={{
+								position: "absolute",
+								top: "50%",
+								left: "50%",
+								marginTop: "-20px",
+								marginLeft: "-20px",
 							}}
 						/>
-					</Box>
+					)}
+					<img
+						src={imageUrl}
+						style={{
+							position: "absolute",
+							opacity: loading ? 0.3 : 1,
+						}}
+					/>
 				</Box>
 				<Box sx={{ mb: 4 }}>
 					<IconButton
