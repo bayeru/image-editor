@@ -1,5 +1,6 @@
 import {
 	Box,
+	CircularProgress,
 	Container,
 	FormControl,
 	FormControlLabel,
@@ -20,30 +21,30 @@ export default function Editor() {
 	// Get params from the URL
 	const params = useParams();
 	const imageId = params.imageId;
+	const [loading, setLoading] = useState(false);
 	const [imageState, setImageState] = useState({
 		width: 750,
 		height: 500,
 		greyscale: false,
 		blur: 0,
 	});
-	
 
 	useEffect(() => {
-
 		const url = buildImageUrl();
 		updateImageUrl(url);
-
 	}, [imageState]);
 
-	const fetchImage = async (url:string) => {
+	const fetchImage = async (url: string) => {
 		console.log("[fetchImage] url", url);
+		setLoading(true);
 		const response = await fetch(url);
 		const imageBlog = await response.blob();
 		const imageUrl = URL.createObjectURL(imageBlog);
 		setImageUrl(imageUrl);
+		setLoading(false);
 	};
 
-	const updateImageUrl = useMemo(() => debounce(fetchImage, 1000), []);
+	const updateImageUrl = useMemo(() => debounce(fetchImage, 300), []);
 	const buildImageUrl = () => {
 		console.log("building image url", imageState);
 		let url = `https://picsum.photos/id/${imageId}/${imageState.width}/${imageState.height}`;
@@ -62,13 +63,13 @@ export default function Editor() {
 			url += "?" + searchParams.toString();
 		}
 
-		console.log("returning url", url)
+		console.log("returning url", url);
 		return url;
 	};
 
 	const [imageUrl, setImageUrl] = useState(() => buildImageUrl());
 
-	const handleWidthChange = (evt: React.ChangeEvent<HTMLInputElement>) => {		
+	const handleWidthChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
 		setImageState({
 			...imageState,
 			width: Number(evt.target.value),
@@ -89,14 +90,17 @@ export default function Editor() {
 		});
 	};
 
-	const handleBlurChange = (evt:Event, value: number | number[], activeThumb: number) => {
+	const handleBlurChange = (evt: Event, value: number | number[], activeThumb: number) => {
 		setImageState({
 			...imageState,
 			blur: value as number,
 		});
 	};
 
-	const handleBlurChangeCommitted = (event: Event | SyntheticEvent<Element, Event>, value: number | number[]) => {
+	const handleBlurChangeCommitted = (
+		event: Event | SyntheticEvent<Element, Event>,
+		value: number | number[]
+	) => {
 		setImageState({
 			...imageState,
 			blur: value as number,
@@ -121,7 +125,38 @@ export default function Editor() {
 					p: 4,
 				}}
 			>
-				<img src={imageUrl} />
+				<Box
+					sx={{
+						width: "750px",
+						height: "500px",
+					}}
+				>
+					<Box
+						sx={{
+							position: "relative",
+							width: imageState.width,
+							height: imageState.height,
+						}}
+					>
+						{loading && (
+							<CircularProgress
+								sx={{
+									position: "absolute",
+									top: "50%",
+									left: "50%",
+									marginTop: "-20px",
+									marginLeft: "-20px",
+								}}
+							/>
+						)}
+						<img
+							src={imageUrl}
+							style={{
+								opacity: loading ? 0.3 : 1,
+							}}
+						/>
+					</Box>
+				</Box>
 				<Box sx={{ mb: 4 }}>
 					<IconButton
 						sx={{
