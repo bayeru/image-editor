@@ -6,19 +6,21 @@ import {
 import { PicsumImage } from "@/common/types";
 import { Link } from "react-router-dom";
 import LoadingScreen from "./LoadingScreen";
+import NewReleasesTwoToneIcon from '@mui/icons-material/NewReleasesTwoTone';
 
 interface ImageListProps {
 	images: PicsumImage[] | undefined;
+	editedImages: string[];
 }
 
-export default function ImageList({ images }: ImageListProps) {
+export default function ImageList({ images, editedImages }: ImageListProps) {
 
 	if (images === undefined) {
 		return <LoadingScreen />;
 	}
 
 	return (
-		<MuiImageList cols={3} gap={16} sx={{ overflow: "hidden", minHeight: "100vh" }}>
+		<MuiImageList cols={3} gap={16} sx={{ overflow: "hidden" }}>
 			{images.map((item) => (
 				<Link to={`/images/${item.id}/edit`} key={item.id}>
 					<ImageListItem
@@ -57,6 +59,18 @@ export default function ImageList({ images }: ImageListProps) {
 							title={item.author}
 							subtitle={`#${item.id}`}
 						/>
+						{editedImages.includes(item.id) && (
+							<NewReleasesTwoToneIcon
+								sx={{
+									position: "absolute",
+									top: 0,
+									right: 0,
+									color: "#fff",
+									margin: 1,
+								}}
+								fontSize="large"
+							/>
+						)}
 					</ImageListItem>
 				</Link>
 			))}

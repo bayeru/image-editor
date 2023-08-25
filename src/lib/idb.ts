@@ -42,11 +42,16 @@ export class ImageDB {
 	async get(id: string): Promise<Image | undefined> {
 		const db = await this.getDB();
 		return await db.get("edited-images", id);
-	}
+	}	
 
 	async getAll(): Promise<Image[]> {
 		const db = await this.getDB();
 		return await db.getAll("edited-images");
+	}
+
+	async getAllKeys(): Promise<string[]> {
+		const db = await this.getDB();
+		return await db.getAllKeys("edited-images");
 	}
 
 	async delete(id: string) {
