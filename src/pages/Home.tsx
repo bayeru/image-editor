@@ -7,10 +7,14 @@ import Pagination from "@/components/Pagination";
 // This function provides the data to our page
 export const loader = async ({ request }:LoaderFunctionArgs) => {
 
-	const page = new URL(request.url).searchParams.get('page');
+	let page = new URL(request.url).searchParams.get('page');
 
 	if (!page || isNaN(Number(page))) {
 		return redirect('/images?page=1');
+	}
+
+	if (Number(page) > 34) {
+		return redirect('/images?page=34');
 	}
 
 	const response = await fetch(`https://picsum.photos/v2/list?page=${page}`);

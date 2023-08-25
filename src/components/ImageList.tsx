@@ -13,7 +13,7 @@ interface ImageListProps {
 
 export default function ImageList({ images }: ImageListProps) {
 	return (
-		<MuiImageList cols={3} gap={16} sx={{ overflow: "hidden" }}>
+		<MuiImageList cols={3} gap={16} sx={{ overflow: "hidden", minHeight: "100vh" }}>
 			{images.map((item) => (
 				<Link to={`/images/${item.id}/edit`} key={item.id}>
 					<ImageListItem

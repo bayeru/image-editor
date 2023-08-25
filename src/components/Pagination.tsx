@@ -6,11 +6,12 @@ interface PaginationProps {
 }
 
 export default function Pagination({ page }: PaginationProps) {
+	
 	return (
 		<Stack spacing={2} alignItems="center" marginTop={8}>
 			<MuiPagination
 				page={page}
-				count={10}
+				count={34}
 				variant="outlined"
 				shape="rounded"
 				size="large"
