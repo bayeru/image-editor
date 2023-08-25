@@ -11,7 +11,7 @@ import Editor from "./pages/Editor";
 import Home from "./pages/Home";
 import { loader as homeLoader } from "./pages/Home";
 import { loader as editorLoader } from "./pages/Editor";
-import MainFallback from "./components/MainFallback";
+import LoadingScreen from "./components/LoadingScreen";
 import Error from "./components/Error";
 
 // Create a browser router with a main layout
@@ -28,7 +28,7 @@ const router = createBrowserRouter(
 );
 
 function App() {
-	return <RouterProvider router={router} fallbackElement={<MainFallback />} />;
+	return <RouterProvider router={router} fallbackElement={<LoadingScreen />} />;
 }
 
 export default App;

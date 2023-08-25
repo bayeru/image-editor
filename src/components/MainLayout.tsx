@@ -1,7 +1,7 @@
 import { Outlet, useNavigation } from "react-router-dom";
 import NavBar from "./NavBar";
 import { Box } from "@mui/material";
-import MainFallback from "./MainFallback";
+import LoadingScreen from "./LoadingScreen";
 
 /**
  * Main layout for the application. Includes the nav bar and the <Outlet /> for the react router.
@@ -16,7 +16,7 @@ export default function MainLayout() {
 		<>
 			<NavBar />
 			<Box>
-				{isLoading && <MainFallback />}
+				{isLoading && <LoadingScreen />}
 				<Outlet />
 			</Box>
 		</>
