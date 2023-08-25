@@ -9,5 +9,5 @@ body, html {
 }
 
 body {
-  overflow: scroll;
+  overflow: scroll-y;
 }
