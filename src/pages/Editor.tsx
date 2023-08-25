@@ -166,9 +166,10 @@ export default function Editor() {
 		debounceFetchImage(newState);
 	};
 
-	const handleReset = () => {
+	const handleReset = async () => {
 		setImageState(defaultState);
-		debounceFetchImage(defaultState);
+		setImageUrl(buildPicsumUrl(defaultState));
+		await editedImagesDB.delete(imageId);
 	};
 
 	return (
