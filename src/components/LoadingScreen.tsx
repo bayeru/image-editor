@@ -1,6 +1,6 @@
 import { CircularProgress, Container } from "@mui/material";
 
-export default function MainFallback() {
+export default function LoadingScreen() {
 	return (
 		<Container
 			sx={{

@@ -11,7 +11,7 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
+import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
 import DownloadIcon from "@mui/icons-material/Download";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { SyntheticEvent, useMemo, useState } from "react";
@@ -20,31 +20,57 @@ import { ImageDB } from "@/lib/idb";
 import { buildPicsumUrl } from "@/util/Util";
 import { Image } from "@/common/types";
 import ScrollToTop from "@/components/ScrollToTop";
+import { QueryClient } from "@tanstack/react-query";
 
 const editedImagesDB = new ImageDB("image-db");
 
-// This function provides data to the editor page
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-	const imageId = params.imageId;
-	const defaultState = {
-		id: imageId,
-		width: 750,
-		height: 500,
-		greyscale: false,
-		blur: 0,
-		cachedImage: null,
+const fetchImageInfoQuery = (imageId: string) => {
+
+	return {
+		queryKey: ["imageId", imageId],
+		queryFn: async () => {
+			const response = await fetch(`https://picsum.photos/id/${imageId}/info`);
+			const data = await response.json();
+			return data;
+		},
 	};
 
-	if (imageId !== undefined) {
-		const cachedImage = await editedImagesDB.get(imageId);
+};
 
-		if (cachedImage !== undefined) {
-			console.log("Returning cached image", cachedImage);
-			return cachedImage;
+export const loader = (queryClient: QueryClient) => {
+
+	return async ({ params }: LoaderFunctionArgs) => {
+		const imageId = params.imageId;
+
+		if (imageId !== undefined) {
+			const cachedImage = await editedImagesDB.get(imageId);
+
+			if (cachedImage !== undefined) {
+				console.log("Returning cached image", cachedImage);
+				return cachedImage;
+			}
 		}
-	}
 
-	return defaultState;
+		if (imageId === undefined || isNaN(Number(imageId))) {
+			return redirect("/images?page=1");
+		}
+
+		const data = await queryClient.ensureQueryData(fetchImageInfoQuery(imageId));
+
+		const defaultState = {
+			id: imageId,
+			width: 750,
+			height: 500,
+			greyscale: false,
+			blur: 0,
+			cachedImage: null,
+			author: data.author
+		};
+
+		return defaultState;
+
+	};
+
 };
 
 export default function Editor() {
@@ -56,7 +82,8 @@ export default function Editor() {
 		height: 500,
 		greyscale: false,
 		blur: 0,
-		cachedImage: null
+		cachedImage: null,
+		author: initialState.author
 	};
 	const [imageUrl, setImageUrl] = useState(() => {
 		if (initialState.cachedImage !== null) {
@@ -153,6 +180,7 @@ export default function Editor() {
 					display: "flex",
 					marginTop: 16,
 					marginBottom: 16,
+					justifyContent: "space-between",
 				}}
 			>
 				<Box
@@ -160,8 +188,7 @@ export default function Editor() {
 						display: "flex",
 						flexDirection: "column",
 						justifyContent: "center",
-						alignItems: "center",
-						p: 4,
+						alignItems: "center"
 					}}
 				>
 					<Box
@@ -220,19 +247,20 @@ export default function Editor() {
 					</Box>
 				</Box>
 				<Box
-					width={460}
 					sx={{
 						display: "flex",
 						flexDirection: "column",
 						justifyContent: "flex-start",
 						alignItems: "center",
-						p: 4,
 						paddingTop: 1,
 					}}
 				>
 					<div></div>
+					<Typography variant="h6" sx={{ mb: 2 }}>
+						{imageState.author} - #{imageState.id}
+					</Typography>
 					<FormControl>
-						<Stack sx={{ maxHeight: 385, overflowY: "auto", p: 4 }} spacing={2}>
+						<Stack spacing={2}>
 							<TextField
 								label="Width"
 								variant="outlined"

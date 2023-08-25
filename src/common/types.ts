@@ -14,4 +14,5 @@ export interface Image {
 	greyscale: boolean,
 	blur: number,
 	cachedImage: ArrayBuffer | null,
+	author: string,
 }

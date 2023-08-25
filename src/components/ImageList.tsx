@@ -1,19 +1,24 @@
-import {
-	Container,
+import {	
 	ImageList as MuiImageList,
 	ImageListItem,
-	ImageListItemBar,
+	ImageListItemBar
 } from "@mui/material";
 import { PicsumImage } from "@/common/types";
 import { Link } from "react-router-dom";
+import LoadingScreen from "./LoadingScreen";
 
 interface ImageListProps {
-	images: PicsumImage[];
+	images: PicsumImage[] | undefined;
 }
 
 export default function ImageList({ images }: ImageListProps) {
+
+	if (images === undefined) {
+		return <LoadingScreen />;
+	}
+
 	return (
-		<MuiImageList cols={3} gap={16} sx={{ overflow: "hidden" }}>
+		<MuiImageList cols={3} gap={16} sx={{ overflow: "hidden", minHeight: "100vh" }}>
 			{images.map((item) => (
 				<Link to={`/images/${item.id}/edit`} key={item.id}>
 					<ImageListItem
@@ -21,6 +26,8 @@ export default function ImageList({ images }: ImageListProps) {
 							cursor: "pointer",
 							borderRadius: 2,
 							overflow: "hidden",
+							width: "367px",
+							height: "267px !important",
 						}}
 					>
 						<img
