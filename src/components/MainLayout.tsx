@@ -10,7 +10,6 @@ export default function MainLayout() {
 
 	const navigation = useNavigation();
 	const isLoading = navigation.state === "loading";
-	console.log("Navigation", navigation);
 
 	return (
 		<>
