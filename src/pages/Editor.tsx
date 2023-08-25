@@ -219,7 +219,7 @@ export default function Editor() {
 							}}
 						/>
 					</Box>
-					<Box sx={{ mb: 4 }}>
+					<Box sx={{ mt: 4 }}>
 						<IconButton
 							sx={{
 								backgroundColor: "#eee",
