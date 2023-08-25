@@ -19,12 +19,12 @@ import { debounce } from "lodash";
 import { ImageDB } from "@/lib/idb";
 import { buildPicsumUrl } from "@/util/Util";
 import { Image } from "@/common/types";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const editedImagesDB = new ImageDB("image-db");
 
 // This function provides data to the editor page
-export const loader = async ({ params }:LoaderFunctionArgs)  => {
-
+export const loader = async ({ params }: LoaderFunctionArgs) => {
 	const imageId = params.imageId;
 	const defaultState = {
 		id: imageId,
@@ -32,7 +32,7 @@ export const loader = async ({ params }:LoaderFunctionArgs)  => {
 		height: 500,
 		greyscale: false,
 		blur: 0,
-		cachedImage: null
+		cachedImage: null,
 	};
 
 	if (imageId !== undefined) {
@@ -45,12 +45,10 @@ export const loader = async ({ params }:LoaderFunctionArgs)  => {
 	}
 
 	return defaultState;
-
 };
 
 export default function Editor() {
-
-	const initialState = (useLoaderData() as Image);
+	const initialState = useLoaderData() as Image;
 	const imageId = initialState.id;
 	const defaultState = {
 		id: imageId,
@@ -61,13 +59,11 @@ export default function Editor() {
 		cachedImage: null
 	};
 	const [imageUrl, setImageUrl] = useState(() => {
-
 		if (initialState.cachedImage !== null) {
 			return URL.createObjectURL(new Blob([initialState.cachedImage]));
 		}
 
 		return buildPicsumUrl(defaultState);
-
 	});
 	const [loading, setLoading] = useState(false);
 	const [imageState, setImageState] = useState(initialState);
@@ -80,19 +76,18 @@ export default function Editor() {
 		const url = buildPicsumUrl(image);
 		const response = await fetch(url);
 		const imageBlog = await response.blob();
-		console.log("imageBlog", imageBlog);		
+		console.log("imageBlog", imageBlog);
 		const imageUrl = URL.createObjectURL(imageBlog);
 		setImageUrl(imageUrl);
 		setLoading(false);
 		const arrayBuffer = await imageBlog.arrayBuffer();
 		editedImagesDB.put({
 			...image,
-			cachedImage: arrayBuffer
+			cachedImage: arrayBuffer,
 		});
 	};
 
 	const debounceFetchImage = useMemo(() => debounce(fetchImage, 300), []);
-
 
 	const handleWidthChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
 		const newState = {
@@ -100,12 +95,11 @@ export default function Editor() {
 			width: Number(evt.target.value),
 		};
 
-		setImageState(newState);	
+		setImageState(newState);
 		debounceFetchImage(newState);
 	};
 
 	const handleHeightChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-
 		const newState = {
 			...imageState,
 			height: Number(evt.target.value),
@@ -151,132 +145,135 @@ export default function Editor() {
 	};
 
 	return (
-		<Container
-			maxWidth={"lg"}
-			sx={{
-				display: "flex",
-				marginTop: 16,
-				marginBottom: 16,
-			}}
-		>
-			<Box
+		<>
+			<ScrollToTop />
+			<Container
+				maxWidth={"lg"}
 				sx={{
 					display: "flex",
-					flexDirection: "column",
-					justifyContent: "center",
-					alignItems: "center",
-					p: 4,
+					marginTop: 16,
+					marginBottom: 16,
 				}}
 			>
 				<Box
 					sx={{
-						position: "relative",
-						width: "750px",
-						height: "500px",
-						overflow: "overlay",
-						backgroundColor: "#eee",
+						display: "flex",
+						flexDirection: "column",
+						justifyContent: "center",
+						alignItems: "center",
+						p: 4,
 					}}
 				>
-					{loading && (
-						<CircularProgress
-							sx={{
+					<Box
+						sx={{
+							position: "relative",
+							width: "750px",
+							height: "500px",
+							overflow: "overlay",
+							backgroundColor: "#eee",
+						}}
+					>
+						{loading && (
+							<CircularProgress
+								sx={{
+									position: "absolute",
+									top: "50%",
+									left: "50%",
+									marginTop: "-20px",
+									marginLeft: "-20px",
+								}}
+							/>
+						)}
+						<img
+							src={imageUrl}
+							style={{
 								position: "absolute",
-								top: "50%",
-								left: "50%",
-								marginTop: "-20px",
-								marginLeft: "-20px",
+								opacity: loading ? 0.3 : 1,
 							}}
 						/>
-					)}
-					<img
-						src={imageUrl}
-						style={{
-							position: "absolute",
-							opacity: loading ? 0.3 : 1,
-						}}
-					/>
+					</Box>
+					<Box sx={{ mb: 4 }}>
+						<IconButton
+							sx={{
+								backgroundColor: "#eee",
+								border: "1px solid #ccc",
+								color: "#252525",
+								marginRight: 1,
+							}}
+							title="Reset"
+							onClick={handleReset}
+						>
+							<RestartAltIcon />
+						</IconButton>
+						<IconButton
+							sx={{
+								backgroundColor: "#eee",
+								border: "1px solid #ccc",
+								color: "#252525",
+							}}
+							title="Download"
+							href={imageUrl}
+							download
+						>
+							<DownloadIcon />
+						</IconButton>
+					</Box>
 				</Box>
-				<Box sx={{ mb: 4 }}>
-					<IconButton
-						sx={{
-							backgroundColor: "#eee",
-							border: "1px solid #ccc",
-							color: "#252525",
-							marginRight: 1,
-						}}
-						title="Reset"
-						onClick={handleReset}
-					>
-						<RestartAltIcon />
-					</IconButton>
-					<IconButton
-						sx={{
-							backgroundColor: "#eee",
-							border: "1px solid #ccc",
-							color: "#252525",
-						}}
-						title="Download"
-						href={imageUrl}
-						download
-					>
-						<DownloadIcon />
-					</IconButton>
-				</Box>
-			</Box>
-			<Box
-				width={460}
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					justifyContent: "flex-start",
-					alignItems: "center",
-					p: 4,
-					paddingTop: 1,
-				}}
-			>
-				<div></div>
-				<FormControl>
-					<Stack sx={{ maxHeight: 385, overflowY: "auto", p: 4 }} spacing={2}>
-						<TextField
-							label="Width"
-							variant="outlined"
-							value={imageState.width}
-							size="small"
-							type="number"
-							onChange={handleWidthChange}
-						/>
-						<TextField
-							label="Height"
-							variant="outlined"
-							value={imageState.height}
-							size="small"
-							type="number"
-							onChange={handleHeightChange}
-						/>
-						<FormControlLabel
-							control={<Switch checked={imageState.greyscale} onChange={handleGreyscaleChange} />}
-							label="Greyscale"
-						/>
-						<Box>
-							<Typography id="blur-slider">Blur</Typography>
-							<Slider
-								aria-label="blur-slider"
-								valueLabelDisplay="auto"
-								value={imageState.blur}
-								getAriaValueText={function valuetext(value: number) {
-									return `${value}`;
-								}}
-								step={1}
-								marks
-								min={0}
-								max={10}
-								onChange={handleBlurChange}
-								onChangeCommitted={handleBlurChangeCommitted}
+				<Box
+					width={460}
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						justifyContent: "flex-start",
+						alignItems: "center",
+						p: 4,
+						paddingTop: 1,
+					}}
+				>
+					<div></div>
+					<FormControl>
+						<Stack sx={{ maxHeight: 385, overflowY: "auto", p: 4 }} spacing={2}>
+							<TextField
+								label="Width"
+								variant="outlined"
+								value={imageState.width}
+								size="small"
+								type="number"
+								onChange={handleWidthChange}
 							/>
-						</Box>
-					</Stack>
-				</FormControl>
-			</Box>
-		</Container>
+							<TextField
+								label="Height"
+								variant="outlined"
+								value={imageState.height}
+								size="small"
+								type="number"
+								onChange={handleHeightChange}
+							/>
+							<FormControlLabel
+								control={<Switch checked={imageState.greyscale} onChange={handleGreyscaleChange} />}
+								label="Greyscale"
+							/>
+							<Box>
+								<Typography id="blur-slider">Blur</Typography>
+								<Slider
+									aria-label="blur-slider"
+									valueLabelDisplay="auto"
+									value={imageState.blur}
+									getAriaValueText={function valuetext(value: number) {
+										return `${value}`;
+									}}
+									step={1}
+									marks
+									min={0}
+									max={10}
+									onChange={handleBlurChange}
+									onChangeCommitted={handleBlurChangeCommitted}
+								/>
+							</Box>
+						</Stack>
+					</FormControl>
+				</Box>
+			</Container>
+		</>
 	);
 }
