@@ -1,11 +1,18 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import BurstModeIcon from "@mui/icons-material/BurstMode";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function NavBar() {
 	
 	const isEditor = useLocation().pathname.includes("/edit");
+	const navigate = useNavigate();
+
+	const handleBackClick = () => {
+
+		navigate(-1);
+
+	};
 
 	return (
 		<AppBar
@@ -43,14 +50,13 @@ export default function NavBar() {
 						<Button
 							variant="outlined"
 							size="medium"
-							component={Link}
-							to={"/"}
 							startIcon={<ArrowBackIcon />}
 							sx={{
 								boxShadow: "none",
 							}}
+							onClick={handleBackClick}
 						>
-							HOME
+							BACK
 						</Button>
 					</Box>
 				)}
