@@ -11,105 +11,143 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 import DownloadIcon from "@mui/icons-material/Download";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import { SyntheticEvent, useEffect, useMemo, useState } from "react";
+import { SyntheticEvent, useMemo, useState } from "react";
 import { debounce } from "lodash";
+import { ImageDB } from "@/lib/idb";
+import { buildPicsumUrl } from "@/util/Util";
+import { Image } from "@/common/types";
 
-export default function Editor() {
+const editedImagesDB = new ImageDB("image-db");
+
+// This function provides data to the editor page
+export const loader = async ({ params }:LoaderFunctionArgs)  => {
+
+	const imageId = params.imageId;
 	const defaultState = {
+		id: imageId,
 		width: 750,
 		height: 500,
 		greyscale: false,
 		blur: 0,
+		cachedImage: null
 	};
 
-	const params = useParams();
-	const imageId = params.imageId;
+	if (imageId !== undefined) {
+		const cachedImage = await editedImagesDB.get(imageId);
+
+		if (cachedImage !== undefined) {
+			console.log("Returning cached image", cachedImage);
+			return cachedImage;
+		}
+	}
+
+	return defaultState;
+
+};
+
+export default function Editor() {
+
+	const initialState = (useLoaderData() as Image);
+	const imageId = initialState.id;
+	const defaultState = {
+		id: imageId,
+		width: 750,
+		height: 500,
+		greyscale: false,
+		blur: 0,
+		cachedImage: null
+	};
+	const [imageUrl, setImageUrl] = useState(() => {
+
+		if (initialState.cachedImage !== null) {
+			return URL.createObjectURL(new Blob([initialState.cachedImage]));
+		}
+
+		return buildPicsumUrl(defaultState);
+
+	});
 	const [loading, setLoading] = useState(false);
-	const [imageState, setImageState] = useState(defaultState);
+	const [imageState, setImageState] = useState(initialState);
 
-	useEffect(() => {
-		const url = buildImageUrl();
-		updateImageUrl(url);
-	}, [imageState]);
+	console.log("imageState", imageState, "loading", loading);
 
-	const fetchImage = async (url: string) => {
-		console.log("[fetchImage] url", url);
+	const fetchImage = async (image: Image) => {
+		console.log("fetchImage", image);
 		setLoading(true);
+		const url = buildPicsumUrl(image);
 		const response = await fetch(url);
 		const imageBlog = await response.blob();
+		console.log("imageBlog", imageBlog);		
 		const imageUrl = URL.createObjectURL(imageBlog);
 		setImageUrl(imageUrl);
 		setLoading(false);
+		const arrayBuffer = await imageBlog.arrayBuffer();
+		editedImagesDB.put({
+			...image,
+			cachedImage: arrayBuffer
+		});
 	};
 
-	const updateImageUrl = useMemo(() => debounce(fetchImage, 300), []);
-	const buildImageUrl = () => {
-		console.log("building image url", imageState);
-		let url = `https://picsum.photos/id/${imageId}/${imageState.width}/${imageState.height}`;
+	const debounceFetchImage = useMemo(() => debounce(fetchImage, 300), []);
 
-		const searchParams = new URLSearchParams();
-
-		if (imageState.greyscale) {
-			searchParams.append("grayscale", "true");
-		}
-
-		if (imageState.blur > 0) {
-			searchParams.append("blur", imageState.blur.toString());
-		}
-
-		if (searchParams.toString().length > 0) {
-			url += "?" + searchParams.toString();
-		}
-
-		console.log("returning url", url);
-		return url;
-	};
-
-	const [imageUrl, setImageUrl] = useState(() => buildImageUrl());
 
 	const handleWidthChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-		setImageState({
+		const newState = {
 			...imageState,
 			width: Number(evt.target.value),
-		});
+		};
+
+		setImageState(newState);	
+		debounceFetchImage(newState);
 	};
 
 	const handleHeightChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-		setImageState({
+
+		const newState = {
 			...imageState,
 			height: Number(evt.target.value),
-		});
+		};
+
+		setImageState(newState);
+		debounceFetchImage(newState);
 	};
 
 	const handleGreyscaleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-		setImageState({
+		const newState = {
 			...imageState,
 			greyscale: evt.target.checked,
-		});
+		};
+		setImageState(newState);
+		debounceFetchImage(newState);
 	};
 
 	const handleBlurChange = (evt: Event, value: number | number[], activeThumb: number) => {
-		setImageState({
+		const newState = {
 			...imageState,
 			blur: value as number,
-		});
+		};
+		setImageState(newState);
+		debounceFetchImage(newState);
 	};
 
 	const handleBlurChangeCommitted = (
 		event: Event | SyntheticEvent<Element, Event>,
 		value: number | number[]
 	) => {
-		setImageState({
+		const newState = {
 			...imageState,
 			blur: value as number,
-		});
+		};
+		setImageState(newState);
+		debounceFetchImage(newState);
 	};
 
 	const handleReset = () => {
 		setImageState(defaultState);
+		debounceFetchImage(defaultState);
 	};
 
 	return (
@@ -136,7 +174,7 @@ export default function Editor() {
 						width: "750px",
 						height: "500px",
 						overflow: "overlay",
-						backgroundColor: "#eee"
+						backgroundColor: "#eee",
 					}}
 				>
 					{loading && (
