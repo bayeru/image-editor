@@ -1,22 +1,22 @@
-import { Box, Container } from "@mui/material";
-import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
-import { SyntheticEvent, useMemo, useState } from "react";
-import { debounce } from "lodash";
-import { ImageDB } from "@/lib/idb";
-import { buildPicsumUrl } from "@/util/Util";
-import { Image } from "@/common/types";
-import ScrollToTop from "@/components/ScrollToTop";
-import { QueryClient } from "@tanstack/react-query";
-import { saveAs } from "file-saver";
-import Sidebar from "@/components/Sidebar";
-import Toolbar from "@/components/Toolbar";
-import ImageViewer from "@/components/ImageViewer";
+import { Box, Container } from '@mui/material';
+import { LoaderFunctionArgs, redirect, useLoaderData } from 'react-router-dom';
+import { SyntheticEvent, useMemo, useState } from 'react';
+import { debounce } from 'lodash';
+import { ImageDB } from '@/lib/idb';
+import { buildPicsumUrl } from '@/util/Util';
+import { Image } from '@/common/types';
+import ScrollToTop from '@/components/ScrollToTop';
+import { QueryClient } from '@tanstack/react-query';
+import { saveAs } from 'file-saver';
+import Sidebar from '@/components/Sidebar';
+import Toolbar from '@/components/Toolbar';
+import ImageViewer from '@/components/ImageViewer';
 
-const editedImagesDB = new ImageDB("image-db");
+const editedImagesDB = new ImageDB('image-db');
 
 const fetchImageInfoQuery = (imageId: string) => {
 	return {
-		queryKey: ["imageId", imageId],
+		queryKey: ['imageId', imageId],
 		queryFn: async () => {
 			const response = await fetch(`https://picsum.photos/id/${imageId}/info`);
 			const data = await response.json();
@@ -33,16 +33,18 @@ export const loader = (queryClient: QueryClient) => {
 			const cachedImage = await editedImagesDB.get(imageId);
 
 			if (cachedImage !== undefined) {
-				console.log("Returning cached image", cachedImage);
+				console.log('Returning cached image', cachedImage);
 				return cachedImage;
 			}
 		}
 
 		if (imageId === undefined || isNaN(Number(imageId))) {
-			return redirect("/images?page=1");
+			return redirect('/images?page=1');
 		}
 
-		const data = await queryClient.ensureQueryData(fetchImageInfoQuery(imageId));
+		const data = await queryClient.ensureQueryData(
+			fetchImageInfoQuery(imageId),
+		);
 
 		const defaultState = {
 			id: imageId,
@@ -80,12 +82,12 @@ export default function Editor() {
 	const [loading, setLoading] = useState(false);
 	const [imageState, setImageState] = useState(initialState);
 
-	console.log("imageState", imageState, "loading", loading);
+	console.log('imageState', imageState, 'loading', loading);
 
 	const fetchImage = async (
 		image: Image,
 		updateLoadingState: boolean = true,
-		cacheImage: boolean = true
+		cacheImage: boolean = true,
 	): Promise<string> => {
 		// Update loading state if needed
 		if (updateLoadingState) {
@@ -148,7 +150,11 @@ export default function Editor() {
 		debounceFetchImage(newState);
 	};
 
-	const handleBlurChange = (evt: Event, value: number | number[], activeThumb: number) => {
+	const handleBlurChange = (
+		evt: Event,
+		value: number | number[],
+		activeThumb: number,
+	) => {
 		const newState = {
 			...imageState,
 			blur: value as number,
@@ -159,7 +165,7 @@ export default function Editor() {
 
 	const handleBlurChangeCommitted = (
 		event: Event | SyntheticEvent<Element, Event>,
-		value: number | number[]
+		value: number | number[],
 	) => {
 		const newState = {
 			...imageState,
@@ -176,11 +182,13 @@ export default function Editor() {
 	};
 
 	const handleDownload = async () => {
-		console.log("handleDownload", imageUrl);
-		const filename = `${imageState.author.toLowerCase().replace(" ", "-")}-${imageState.id}.jpg`;
+		console.log('handleDownload', imageUrl);
+		const filename = `${imageState.author.toLowerCase().replace(' ', '-')}-${
+			imageState.id
+		}.jpg`;
 
 		// If the image url is not a blob, fetch the image and then download it
-		if (!imageUrl.includes("blob")) {
+		if (!imageUrl.includes('blob')) {
 			const newBlobUrl = await fetchImage(imageState, false, false);
 			saveAs(newBlobUrl, filename);
 			return;
@@ -194,20 +202,20 @@ export default function Editor() {
 		<>
 			<ScrollToTop />
 			<Container
-				maxWidth={"lg"}
+				maxWidth={'lg'}
 				sx={{
-					display: "flex",
+					display: 'flex',
 					marginTop: 16,
 					marginBottom: 16,
-					justifyContent: "space-between",
+					justifyContent: 'space-between',
 				}}
 			>
 				<Box
 					sx={{
-						display: "flex",
-						flexDirection: "column",
-						justifyContent: "center",
-						alignItems: "center",
+						display: 'flex',
+						flexDirection: 'column',
+						justifyContent: 'center',
+						alignItems: 'center',
 					}}
 				>
 					<ImageViewer loading={loading} imageUrl={imageUrl} />

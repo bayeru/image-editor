@@ -1,11 +1,11 @@
-import { Image } from "@/common/types";
-import { DBSchema, IDBPDatabase, openDB } from "idb";
+import { Image } from '@/common/types';
+import { DBSchema, IDBPDatabase, openDB } from 'idb';
 
 /**
  * Schema for the IndexedDB database
  */
 interface ImageDBSchema extends DBSchema {
-	"edited-images": {
+	'edited-images': {
 		key: string;
 		value: Image;
 	};
@@ -26,7 +26,7 @@ export class ImageDB {
 		if (!this._db) {
 			this._db = await openDB<ImageDBSchema>(this.dbName, 1, {
 				upgrade(db) {
-					db.createObjectStore("edited-images", { keyPath: "id" });
+					db.createObjectStore('edited-images', { keyPath: 'id' });
 				},
 			});
 		}
@@ -36,32 +36,32 @@ export class ImageDB {
 
 	async put(image: any) {
 		const db = await this.getDB();
-		await db.put("edited-images", image);
+		await db.put('edited-images', image);
 	}
 
 	async get(id: string): Promise<Image | undefined> {
 		const db = await this.getDB();
-		return await db.get("edited-images", id);
-	}	
+		return await db.get('edited-images', id);
+	}
 
 	async getAll(): Promise<Image[]> {
 		const db = await this.getDB();
-		return await db.getAll("edited-images");
+		return await db.getAll('edited-images');
 	}
 
 	async getAllKeys(): Promise<string[]> {
 		const db = await this.getDB();
-		return await db.getAllKeys("edited-images");
+		return await db.getAllKeys('edited-images');
 	}
 
 	async delete(id: string) {
 		const db = await this.getDB();
-		return await db.delete("edited-images", id);
+		return await db.delete('edited-images', id);
 	}
 
 	async clearAll() {
 		const db = await this.getDB();
-		return await db.clear("edited-images");
+		return await db.clear('edited-images');
 	}
 
 	async close() {

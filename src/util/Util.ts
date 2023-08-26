@@ -1,5 +1,4 @@
-import { Image } from "@/common/types";
-
+import { Image } from '@/common/types';
 
 export const shallowEqual = (objA: any, objB: any) => {
 	const aKeys = Object.keys(objA);
@@ -18,22 +17,21 @@ export const shallowEqual = (objA: any, objB: any) => {
 	return true;
 };
 
-
 export const buildPicsumUrl = (image: Image) => {
 	let url = `https://picsum.photos/id/${image.id}/${image.width}/${image.height}`;
 
 	const searchParams = new URLSearchParams();
 
 	if (image.greyscale) {
-		searchParams.append("grayscale", "true");
+		searchParams.append('grayscale', 'true');
 	}
 
 	if (image.blur > 0) {
-		searchParams.append("blur", image.blur.toString());
+		searchParams.append('blur', image.blur.toString());
 	}
 
 	if (searchParams.toString().length > 0) {
-		url += "?" + searchParams.toString();
+		url += '?' + searchParams.toString();
 	}
 
 	return url;
