@@ -1,16 +1,4 @@
-import {
-	Box,
-	CircularProgress,
-	Container,
-	FormControl,
-	FormControlLabel,
-	IconButton,
-	Slider,
-	Stack,
-	Switch,
-	TextField,
-	Typography,
-} from "@mui/material";
+import { Box, CircularProgress, Container, IconButton } from "@mui/material";
 import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
 import DownloadIcon from "@mui/icons-material/Download";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
@@ -22,11 +10,11 @@ import { Image } from "@/common/types";
 import ScrollToTop from "@/components/ScrollToTop";
 import { QueryClient } from "@tanstack/react-query";
 import { saveAs } from "file-saver";
+import Sidebar from "@/components/Sidebar";
 
 const editedImagesDB = new ImageDB("image-db");
 
 const fetchImageInfoQuery = (imageId: string) => {
-
 	return {
 		queryKey: ["imageId", imageId],
 		queryFn: async () => {
@@ -35,11 +23,9 @@ const fetchImageInfoQuery = (imageId: string) => {
 			return data;
 		},
 	};
-
 };
 
 export const loader = (queryClient: QueryClient) => {
-
 	return async ({ params }: LoaderFunctionArgs) => {
 		const imageId = params.imageId;
 
@@ -65,13 +51,11 @@ export const loader = (queryClient: QueryClient) => {
 			greyscale: false,
 			blur: 0,
 			cachedImage: null,
-			author: data.author
+			author: data.author,
 		};
 
 		return defaultState;
-
 	};
-
 };
 
 export default function Editor() {
@@ -84,7 +68,7 @@ export default function Editor() {
 		greyscale: false,
 		blur: 0,
 		cachedImage: null,
-		author: initialState.author
+		author: initialState.author,
 	};
 	const [imageUrl, setImageUrl] = useState(() => {
 		if (initialState.cachedImage !== null) {
@@ -98,8 +82,11 @@ export default function Editor() {
 
 	console.log("imageState", imageState, "loading", loading);
 
-	const fetchImage = async (image: Image, updateLoadingState: boolean = true, cacheImage: boolean = true):Promise<string> => {
-		
+	const fetchImage = async (
+		image: Image,
+		updateLoadingState: boolean = true,
+		cacheImage: boolean = true
+	): Promise<string> => {
 		// Update loading state if needed
 		if (updateLoadingState) {
 			setLoading(true);
@@ -128,7 +115,6 @@ export default function Editor() {
 		}
 
 		return imageUrl;
-
 	};
 
 	const debounceFetchImage = useMemo(() => debounce(fetchImage, 300), []);
@@ -190,9 +176,8 @@ export default function Editor() {
 	};
 
 	const handleDownload = async () => {
-
 		console.log("handleDownload", imageUrl);
-		const filename = `${imageState.author.toLowerCase().replace(' ', '-')}-${imageState.id}.jpg`;
+		const filename = `${imageState.author.toLowerCase().replace(" ", "-")}-${imageState.id}.jpg`;
 
 		// If the image url is not a blob, fetch the image and then download it
 		if (!imageUrl.includes("blob")) {
@@ -200,10 +185,9 @@ export default function Editor() {
 			saveAs(newBlobUrl, filename);
 			return;
 		}
-		
+
 		// Just download the blob
 		saveAs(imageUrl, filename);
-
 	};
 
 	return (
@@ -223,7 +207,7 @@ export default function Editor() {
 						display: "flex",
 						flexDirection: "column",
 						justifyContent: "center",
-						alignItems: "center"
+						alignItems: "center",
 					}}
 				>
 					<Box
@@ -280,61 +264,14 @@ export default function Editor() {
 						</IconButton>
 					</Box>
 				</Box>
-				<Box
-					sx={{
-						display: "flex",
-						flexDirection: "column",
-						justifyContent: "flex-start",
-						alignItems: "center",
-						paddingTop: 1,
-					}}
-				>
-					<div></div>
-					<Typography variant="h6" sx={{ mb: 2 }}>
-						{imageState.author} - #{imageState.id}
-					</Typography>
-					<FormControl>
-						<Stack spacing={2}>
-							<TextField
-								label="Width"
-								variant="outlined"
-								value={imageState.width}
-								size="small"
-								type="number"
-								onChange={handleWidthChange}
-							/>
-							<TextField
-								label="Height"
-								variant="outlined"
-								value={imageState.height}
-								size="small"
-								type="number"
-								onChange={handleHeightChange}
-							/>
-							<FormControlLabel
-								control={<Switch checked={imageState.greyscale} onChange={handleGreyscaleChange} />}
-								label="Greyscale"
-							/>
-							<Box>
-								<Typography id="blur-slider">Blur</Typography>
-								<Slider
-									aria-label="blur-slider"
-									valueLabelDisplay="auto"
-									value={imageState.blur}
-									getAriaValueText={function valuetext(value: number) {
-										return `${value}`;
-									}}
-									step={1}
-									marks
-									min={0}
-									max={10}
-									onChange={handleBlurChange}
-									onChangeCommitted={handleBlurChangeCommitted}
-								/>
-							</Box>
-						</Stack>
-					</FormControl>
-				</Box>
+				<Sidebar
+					imageState={imageState}
+					onWidthChange={handleWidthChange}
+					onHeightChange={handleHeightChange}
+					onGreyscaleChange={handleGreyscaleChange}
+					onBlurChange={handleBlurChange}
+					onBlurChangeCommitted={handleBlurChangeCommitted}
+				/>
 			</Container>
 		</>
 	);
