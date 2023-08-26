@@ -21,6 +21,7 @@ import { buildPicsumUrl } from "@/util/Util";
 import { Image } from "@/common/types";
 import ScrollToTop from "@/components/ScrollToTop";
 import { QueryClient } from "@tanstack/react-query";
+import { saveAs } from "file-saver";
 
 const editedImagesDB = new ImageDB("image-db");
 
@@ -97,21 +98,37 @@ export default function Editor() {
 
 	console.log("imageState", imageState, "loading", loading);
 
-	const fetchImage = async (image: Image) => {
-		console.log("fetchImage", image);
-		setLoading(true);
-		const url = buildPicsumUrl(image);
-		const response = await fetch(url);
-		const imageBlog = await response.blob();
-		console.log("imageBlog", imageBlog);
-		const imageUrl = URL.createObjectURL(imageBlog);
+	const fetchImage = async (image: Image, updateLoadingState: boolean = true, cacheImage: boolean = true):Promise<string> => {
+		
+		// Update loading state if needed
+		if (updateLoadingState) {
+			setLoading(true);
+		}
+
+		// Fetch image after building the picsum url
+		const response = await fetch(buildPicsumUrl(image));
+		const imageBlob = await response.blob();
+		const imageUrl = URL.createObjectURL(imageBlob);
+
+		// Update image url
 		setImageUrl(imageUrl);
-		setLoading(false);
-		const arrayBuffer = await imageBlog.arrayBuffer();
-		editedImagesDB.put({
-			...image,
-			cachedImage: arrayBuffer,
-		});
+
+		// Update loading state if needed
+		if (updateLoadingState) {
+			setLoading(false);
+		}
+
+		// Cache image if needed
+		if (cacheImage) {
+			const arrayBuffer = await imageBlob.arrayBuffer();
+			editedImagesDB.put({
+				...image,
+				cachedImage: arrayBuffer,
+			});
+		}
+
+		return imageUrl;
+
 	};
 
 	const debounceFetchImage = useMemo(() => debounce(fetchImage, 300), []);
@@ -170,6 +187,23 @@ export default function Editor() {
 		setImageState(defaultState);
 		setImageUrl(buildPicsumUrl(defaultState));
 		await editedImagesDB.delete(imageId);
+	};
+
+	const handleDownload = async () => {
+
+		console.log("handleDownload", imageUrl);
+		const filename = `${imageState.author.toLowerCase().replace(' ', '-')}-${imageState.id}.jpg`;
+
+		// If the image url is not a blob, fetch the image and then download it
+		if (!imageUrl.includes("blob")) {
+			const newBlobUrl = await fetchImage(imageState, false, false);
+			saveAs(newBlobUrl, filename);
+			return;
+		}
+		
+		// Just download the blob
+		saveAs(imageUrl, filename);
+
 	};
 
 	return (
@@ -240,8 +274,7 @@ export default function Editor() {
 								color: "#252525",
 							}}
 							title="Download"
-							href={imageUrl}
-							download
+							onClick={handleDownload}
 						>
 							<DownloadIcon />
 						</IconButton>
