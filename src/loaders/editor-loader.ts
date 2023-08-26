@@ -30,7 +30,7 @@ export const loader = (queryClient: QueryClient) => {
 		}
 
 		const data = await queryClient.ensureQueryData(
-			fetchImageInfoQuery(imageId),
+			fetchImageInfoQuery(imageId)
 		);
 
 		const defaultState = {

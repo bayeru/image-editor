@@ -19,11 +19,11 @@ interface SidebarProps {
 	onBlurChange: (
 		evt: Event,
 		value: number | number[],
-		activeThumb: number,
+		activeThumb: number
 	) => void;
 	onBlurChangeCommitted: (
 		event: Event | React.SyntheticEvent<Element, Event>,
-		value: number | number[],
+		value: number | number[]
 	) => void;
 }
 
@@ -37,6 +37,7 @@ export default function Sidebar(props: SidebarProps) {
 				flexDirection: 'column',
 				justifyContent: 'flex-start',
 				alignItems: 'center',
+				minWidth: '250px',
 				paddingTop: 1,
 			}}
 		>
