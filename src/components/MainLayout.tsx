@@ -13,7 +13,11 @@ export default function MainLayout() {
 	return (
 		<>
 			<NavBar />
-			<Box>
+			<Box
+				sx={{
+					paddingBottom: 1,
+				}}
+			>
 				{isLoading && <LoadingScreen />}
 				<Outlet />
 			</Box>

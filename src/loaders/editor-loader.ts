@@ -29,9 +29,7 @@ export const loader = (queryClient: QueryClient) => {
 			return redirect('/images?page=1');
 		}
 
-		const data = await queryClient.ensureQueryData(
-			fetchImageInfoQuery(imageId),
-		);
+		const data = await queryClient.ensureQueryData(fetchImageInfoQuery(imageId));
 
 		const defaultState = {
 			id: imageId,

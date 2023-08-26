@@ -1,13 +1,4 @@
-import {
-	Box,
-	FormControl,
-	FormControlLabel,
-	Slider,
-	Stack,
-	Switch,
-	TextField,
-	Typography,
-} from '@mui/material';
+import { Box, FormControl, FormControlLabel, Slider, Stack, Switch, TextField, Typography } from '@mui/material';
 
 import { Image } from '@/common/types';
 
@@ -16,15 +7,8 @@ interface SidebarProps {
 	onWidthChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	onHeightChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	onGreyscaleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	onBlurChange: (
-		evt: Event,
-		value: number | number[],
-		activeThumb: number,
-	) => void;
-	onBlurChangeCommitted: (
-		event: Event | React.SyntheticEvent<Element, Event>,
-		value: number | number[],
-	) => void;
+	onBlurChange: (evt: Event, value: number | number[], activeThumb: number) => void;
+	onBlurChangeCommitted: (event: Event | React.SyntheticEvent<Element, Event>, value: number | number[]) => void;
 }
 
 export default function Sidebar(props: SidebarProps) {
@@ -37,6 +21,7 @@ export default function Sidebar(props: SidebarProps) {
 				flexDirection: 'column',
 				justifyContent: 'flex-start',
 				alignItems: 'center',
+				minWidth: '250px',
 				paddingTop: 1,
 			}}
 		>
@@ -63,12 +48,7 @@ export default function Sidebar(props: SidebarProps) {
 						onChange={props.onHeightChange}
 					/>
 					<FormControlLabel
-						control={
-							<Switch
-								checked={imageState.greyscale}
-								onChange={props.onGreyscaleChange}
-							/>
-						}
+						control={<Switch checked={imageState.greyscale} onChange={props.onGreyscaleChange} />}
 						label="Greyscale"
 					/>
 					<Box>

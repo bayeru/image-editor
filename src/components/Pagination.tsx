@@ -1,9 +1,5 @@
 import { Link } from 'react-router-dom';
-import {
-	Pagination as MuiPagination,
-	PaginationItem,
-	Stack,
-} from '@mui/material';
+import { Pagination as MuiPagination, PaginationItem, Stack } from '@mui/material';
 
 interface PaginationProps {
 	page: number;
@@ -19,13 +15,7 @@ export default function Pagination({ page }: PaginationProps) {
 				shape="rounded"
 				size="large"
 				renderItem={(item) => {
-					return (
-						<PaginationItem
-							component={Link}
-							to={`/images?page=${item.page}`}
-							{...item}
-						/>
-					);
+					return <PaginationItem component={Link} to={`/images?page=${item.page}`} {...item} />;
 				}}
 			/>
 		</Stack>
