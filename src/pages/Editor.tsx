@@ -1,64 +1,15 @@
 import { Box, Container } from '@mui/material';
-import { LoaderFunctionArgs, redirect, useLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 import { SyntheticEvent, useMemo, useState } from 'react';
 import { debounce } from 'lodash';
-import { ImageDB } from '@/lib/idb';
 import { buildPicsumUrl } from '@/util/Util';
 import { Image } from '@/common/types';
 import ScrollToTop from '@/components/ScrollToTop';
-import { QueryClient } from '@tanstack/react-query';
 import { saveAs } from 'file-saver';
-import Sidebar from '@/components/Sidebar';
-import Toolbar from '@/components/Toolbar';
-import ImageViewer from '@/components/ImageViewer';
-
-const editedImagesDB = new ImageDB('image-db');
-
-const fetchImageInfoQuery = (imageId: string) => {
-	return {
-		queryKey: ['imageId', imageId],
-		queryFn: async () => {
-			const response = await fetch(`https://picsum.photos/id/${imageId}/info`);
-			const data = await response.json();
-			return data;
-		},
-	};
-};
-
-export const loader = (queryClient: QueryClient) => {
-	return async ({ params }: LoaderFunctionArgs) => {
-		const imageId = params.imageId;
-
-		if (imageId !== undefined) {
-			const cachedImage = await editedImagesDB.get(imageId);
-
-			if (cachedImage !== undefined) {
-				console.log('Returning cached image', cachedImage);
-				return cachedImage;
-			}
-		}
-
-		if (imageId === undefined || isNaN(Number(imageId))) {
-			return redirect('/images?page=1');
-		}
-
-		const data = await queryClient.ensureQueryData(
-			fetchImageInfoQuery(imageId),
-		);
-
-		const defaultState = {
-			id: imageId,
-			width: 750,
-			height: 500,
-			greyscale: false,
-			blur: 0,
-			cachedImage: null,
-			author: data.author,
-		};
-
-		return defaultState;
-	};
-};
+import Sidebar from '@/components/Editor/Sidebar';
+import Toolbar from '@/components/Editor/Toolbar';
+import ImageViewer from '@/components/Editor/ImageViewer';
+import { editedImagesDB } from "@/lib/idb";
 
 export default function Editor() {
 	const initialState = useLoaderData() as Image;
@@ -82,7 +33,7 @@ export default function Editor() {
 	const [loading, setLoading] = useState(false);
 	const [imageState, setImageState] = useState(initialState);
 
-	console.log('imageState', imageState, 'loading', loading);
+	//console.log('imageState', imageState, 'loading', loading);
 
 	const fetchImage = async (
 		image: Image,

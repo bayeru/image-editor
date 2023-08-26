@@ -69,3 +69,5 @@ export class ImageDB {
 		return await db.close();
 	}
 }
+
+export const editedImagesDB = new ImageDB('image-db');

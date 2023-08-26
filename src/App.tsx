@@ -8,11 +8,10 @@ import {
 } from 'react-router-dom';
 import MainLayout from './components/MainLayout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Editor from './pages/Editor';
 import Home from './pages/Home';
-import { loader as homeLoader } from './pages/Home';
-import { loader as editorLoader } from './pages/Editor';
+import { loader as homeLoader } from '@/loaders/home-loader';
+import { loader as editorLoader } from '@/loaders/editor-loader';
 import LoadingScreen from './components/LoadingScreen';
 import Error from './components/Error';
 
@@ -24,7 +23,6 @@ const queryClient = new QueryClient({
 	},
 });
 
-// Create a browser router with a main layout
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<>
@@ -52,7 +50,6 @@ function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<RouterProvider router={router} fallbackElement={<LoadingScreen />} />;
-			<ReactQueryDevtools initialIsOpen={false} />
 		</QueryClientProvider>
 	);
 }
