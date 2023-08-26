@@ -1,7 +1,5 @@
 import { Box, CircularProgress, Container, IconButton } from "@mui/material";
 import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
-import DownloadIcon from "@mui/icons-material/Download";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { SyntheticEvent, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import { ImageDB } from "@/lib/idb";
@@ -11,6 +9,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { QueryClient } from "@tanstack/react-query";
 import { saveAs } from "file-saver";
 import Sidebar from "@/components/Sidebar";
+import Toolbar from "@/components/Toolbar";
 
 const editedImagesDB = new ImageDB("image-db");
 
@@ -238,31 +237,7 @@ export default function Editor() {
 							}}
 						/>
 					</Box>
-					<Box sx={{ mt: 4 }}>
-						<IconButton
-							sx={{
-								backgroundColor: "#eee",
-								border: "1px solid #ccc",
-								color: "#252525",
-								marginRight: 1,
-							}}
-							title="Reset"
-							onClick={handleReset}
-						>
-							<RestartAltIcon />
-						</IconButton>
-						<IconButton
-							sx={{
-								backgroundColor: "#eee",
-								border: "1px solid #ccc",
-								color: "#252525",
-							}}
-							title="Download"
-							onClick={handleDownload}
-						>
-							<DownloadIcon />
-						</IconButton>
-					</Box>
+					<Toolbar onReset={handleReset} onDownload={handleDownload} />
 				</Box>
 				<Sidebar
 					imageState={imageState}
