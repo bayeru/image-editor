@@ -9,10 +9,10 @@ export interface PicsumImage {
 
 export interface Image {
 	id: string;
-	width: number,
-	height: number,
-	greyscale: boolean,
-	blur: number,
-	cachedImage: ArrayBuffer | null,
-	author: string,
+	width: number;
+	height: number;
+	greyscale: boolean;
+	blur: number;
+	cachedImage: ArrayBuffer | null;
+	author: string;
 }

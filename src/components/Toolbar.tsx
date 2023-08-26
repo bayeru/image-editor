@@ -1,12 +1,10 @@
-import { Box, IconButton } from "@mui/material";
-import DownloadIcon from "@mui/icons-material/Download";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import { Box, IconButton } from '@mui/material';
+import DownloadIcon from '@mui/icons-material/Download';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 interface ToolbarProps {
-
 	onReset: () => void;
 	onDownload: () => void;
-
 }
 
 export default function Toolbar(props: ToolbarProps) {
@@ -14,9 +12,9 @@ export default function Toolbar(props: ToolbarProps) {
 		<Box sx={{ mt: 4 }}>
 			<IconButton
 				sx={{
-					backgroundColor: "#eee",
-					border: "1px solid #ccc",
-					color: "#252525",
+					backgroundColor: '#eee',
+					border: '1px solid #ccc',
+					color: '#252525',
 					marginRight: 1,
 				}}
 				title="Reset"
@@ -26,9 +24,9 @@ export default function Toolbar(props: ToolbarProps) {
 			</IconButton>
 			<IconButton
 				sx={{
-					backgroundColor: "#eee",
-					border: "1px solid #ccc",
-					color: "#252525",
+					backgroundColor: '#eee',
+					border: '1px solid #ccc',
+					color: '#252525',
 				}}
 				title="Download"
 				onClick={props.onDownload}
