@@ -1,10 +1,13 @@
-import { LoaderFunctionArgs, redirect, useSearchParams } from "react-router-dom";
+import { LoaderFunctionArgs, redirect, useLoaderData, useSearchParams } from "react-router-dom";
 import { PicsumImage } from "@/common/types";
 import ImageList from "@/components/ImageList";
 import { Container } from "@mui/material";
 import Pagination from "@/components/Pagination";
 import { useQuery } from "@tanstack/react-query";
 import { QueryClient } from "@tanstack/react-query";
+import { ImageDB } from "@/lib/idb";
+
+const editedImagesDB = new ImageDB("image-db");
 
 const fetchImagesQuery = (page: number) => {
 	return {
@@ -30,12 +33,19 @@ export const loader = (queryClient: QueryClient) => {
 			return redirect("/images?page=34");
 		}
 
-		return await queryClient.ensureQueryData(fetchImagesQuery(Number(page)));
+		const allKeys = await editedImagesDB.getAllKeys();
+		const data = await queryClient.ensureQueryData(fetchImagesQuery(Number(page)));
+
+		return {
+			editedImages: allKeys,
+			data
+		}
 	};
 };
 
 export default function Home() {
 
+	const { editedImages } = useLoaderData() as { editedImages: string[] };
 	const [searchParams] = useSearchParams();
 	const page = Number(searchParams.get("page"));
 	const { data: images } = useQuery<PicsumImage[]>(fetchImagesQuery(page));
@@ -50,7 +60,7 @@ export default function Home() {
 				marginBottom: 16,
 			}}
 		>
-			<ImageList images={images} />
+			<ImageList images={images} editedImages={editedImages}/>
 			<Pagination page={page} />
 		</Container>
 	);
