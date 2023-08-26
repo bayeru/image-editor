@@ -8,7 +8,7 @@ const fetchImagesQuery = (page: number) => {
 		queryKey: ['page', page || 1],
 		queryFn: async () => {
 			const response = await fetch(
-				`https://picsum.photos/v2/list?page=${page}`,
+				`https://picsum.photos/v2/list?page=${page}`
 			);
 			const data = await response.json();
 			return data;
@@ -30,7 +30,7 @@ export const loader = (queryClient: QueryClient) => {
 
 		const allKeys = await editedImagesDB.getAllKeys();
 		const images = await queryClient.ensureQueryData<PicsumImage[]>(
-			fetchImagesQuery(Number(page)),
+			fetchImagesQuery(Number(page))
 		);
 
 		return {

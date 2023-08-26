@@ -9,7 +9,7 @@ import { saveAs } from 'file-saver';
 import Sidebar from '@/components/Editor/Sidebar';
 import Toolbar from '@/components/Editor/Toolbar';
 import ImageViewer from '@/components/Editor/ImageViewer';
-import { editedImagesDB } from "@/lib/idb";
+import { editedImagesDB } from '@/lib/idb';
 
 export default function Editor() {
 	const initialState = useLoaderData() as Image;
@@ -33,12 +33,10 @@ export default function Editor() {
 	const [loading, setLoading] = useState(false);
 	const [imageState, setImageState] = useState(initialState);
 
-	//console.log('imageState', imageState, 'loading', loading);
-
 	const fetchImage = async (
 		image: Image,
 		updateLoadingState: boolean = true,
-		cacheImage: boolean = true,
+		cacheImage: boolean = true
 	): Promise<string> => {
 		// Update loading state if needed
 		if (updateLoadingState) {
@@ -104,7 +102,7 @@ export default function Editor() {
 	const handleBlurChange = (
 		evt: Event,
 		value: number | number[],
-		activeThumb: number,
+		activeThumb: number
 	) => {
 		const newState = {
 			...imageState,
@@ -116,7 +114,7 @@ export default function Editor() {
 
 	const handleBlurChangeCommitted = (
 		event: Event | SyntheticEvent<Element, Event>,
-		value: number | number[],
+		value: number | number[]
 	) => {
 		const newState = {
 			...imageState,
@@ -159,6 +157,7 @@ export default function Editor() {
 					marginTop: 16,
 					marginBottom: 16,
 					justifyContent: 'space-between',
+					flexDirection: { xs: 'column', md: 'row'}
 				}}
 			>
 				<Box
@@ -167,6 +166,8 @@ export default function Editor() {
 						flexDirection: 'column',
 						justifyContent: 'center',
 						alignItems: 'center',
+						width: '100%',
+						mr: 6,
 					}}
 				>
 					<ImageViewer loading={loading} imageUrl={imageUrl} />

@@ -42,14 +42,14 @@ const router = createBrowserRouter(
 					loader={editorLoader(queryClient)}
 				/>
 			</Route>
-		</>,
-	),
+		</>
+	)
 );
 
 function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<RouterProvider router={router} fallbackElement={<LoadingScreen />} />;
+			<RouterProvider router={router} fallbackElement={<LoadingScreen />} />
 		</QueryClientProvider>
 	);
 }

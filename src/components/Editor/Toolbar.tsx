@@ -9,7 +9,7 @@ interface ToolbarProps {
 
 export default function Toolbar(props: ToolbarProps) {
 	return (
-		<Box sx={{ mt: 4 }}>
+		<Box sx={{ mt: 4, mb: 4 }}>
 			<IconButton
 				sx={{
 					backgroundColor: '#eee',

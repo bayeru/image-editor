@@ -19,7 +19,14 @@ export default function ImageList({ images, editedImages }: ImageListProps) {
 	}
 
 	return (
-		<MuiImageList cols={3} gap={16} sx={{ overflow: 'hidden' }}>
+		<MuiImageList
+			cols={3}
+			gap={16}
+			sx={{
+				overflow: 'hidden',
+				gridTemplateColumns: 'repeat(auto-fill, minmax(367px, 1fr)) !important',
+			}}
+		>
 			{images.map((item) => (
 				<Link to={`/images/${item.id}/edit`} key={item.id}>
 					<ImageListItem
@@ -27,13 +34,12 @@ export default function ImageList({ images, editedImages }: ImageListProps) {
 							cursor: 'pointer',
 							borderRadius: 2,
 							overflow: 'hidden',
-							width: '367px',
-							height: '267px !important',
 						}}
 					>
 						<img
 							src={`https://picsum.photos/id/${item.id}/367/267`}
-							srcSet={`${item.url}?w=248&fit=crop&auto=format&dpr=2 2x`}
+							width="367px"
+							height="267px"
 							alt={item.author}
 							loading="lazy"
 						/>
