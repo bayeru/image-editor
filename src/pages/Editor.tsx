@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Container, IconButton } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { LoaderFunctionArgs, redirect, useLoaderData } from "react-router-dom";
 import { SyntheticEvent, useMemo, useState } from "react";
 import { debounce } from "lodash";
@@ -10,6 +10,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { saveAs } from "file-saver";
 import Sidebar from "@/components/Sidebar";
 import Toolbar from "@/components/Toolbar";
+import ImageViewer from "@/components/ImageViewer";
 
 const editedImagesDB = new ImageDB("image-db");
 
@@ -209,34 +210,7 @@ export default function Editor() {
 						alignItems: "center",
 					}}
 				>
-					<Box
-						sx={{
-							position: "relative",
-							width: "750px",
-							height: "500px",
-							overflow: "overlay",
-							backgroundColor: "#eee",
-						}}
-					>
-						{loading && (
-							<CircularProgress
-								sx={{
-									position: "absolute",
-									top: "50%",
-									left: "50%",
-									marginTop: "-20px",
-									marginLeft: "-20px",
-								}}
-							/>
-						)}
-						<img
-							src={imageUrl}
-							style={{
-								position: "absolute",
-								opacity: loading ? 0.3 : 1,
-							}}
-						/>
-					</Box>
+					<ImageViewer loading={loading} imageUrl={imageUrl} />
 					<Toolbar onReset={handleReset} onDownload={handleDownload} />
 				</Box>
 				<Sidebar
