@@ -41,8 +41,7 @@ export default function ImageList({ images, editedImages }: ImageListProps) {
 						/>
 						<ImageListItemBar
 							sx={{
-								background:
-									'linear-gradient(to top, rgba(1,1,1,0.7) 0%, ' + 'rgba(1,1,1,0.3) 70%, rgba(1, 1, 1, 0) 100%)',
+								background: 'linear-gradient(to top, rgba(1,1,1,0.7) 0%, rgba(1,1,1,0.3) 70%, rgba(1, 1, 1, 0) 100%)',
 								'& .MuiImageListItemBar-titleWrap': {
 									display: 'flex',
 									justifyContent: 'space-between',

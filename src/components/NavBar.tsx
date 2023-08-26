@@ -16,8 +16,7 @@ export default function NavBar() {
 			position={'fixed'}
 			sx={{
 				margin: 0,
-				backgroundColor: '#fcfcfc',
-				borderBottom: '1px solid rgba(0, 0, 0, 0.07)',
+				backgroundColor: '#f7f9fc'
 			}}
 			elevation={0}
 		>
@@ -36,13 +35,15 @@ export default function NavBar() {
 							marginRight: 1,
 						}}
 					>
-						<BurstModeIcon />
+						<BurstModeIcon fontSize="large"/>
 						<Typography
 							sx={{
 								ml: 1,
 								variant: 'h1',
 								textTransform: 'none',
+								fontWeight: 'bold',
 							}}
+							color='black'
 						>
 							ImagED
 						</Typography>
