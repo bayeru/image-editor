@@ -38,6 +38,9 @@ export default function Sidebar(props: SidebarProps) {
 						size="small"
 						type="number"
 						onChange={props.onWidthChange}
+						inputProps={{
+							min: 1
+						}}
 					/>
 					<TextField
 						label="Height"
@@ -46,6 +49,9 @@ export default function Sidebar(props: SidebarProps) {
 						size="small"
 						type="number"
 						onChange={props.onHeightChange}
+						inputProps={{
+							min: 1
+						}}
 					/>
 					<FormControlLabel
 						control={<Switch checked={imageState.greyscale} onChange={props.onGreyscaleChange} />}
