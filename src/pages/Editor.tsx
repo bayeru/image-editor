@@ -38,25 +38,20 @@ export default function Editor() {
 		updateLoadingState: boolean = true,
 		cacheImage: boolean = true
 	): Promise<string> => {
-		// Update loading state if needed
 		if (updateLoadingState) {
 			setLoading(true);
 		}
 
-		// Fetch image after building the picsum url
 		const response = await fetch(buildPicsumUrl(image));
 		const imageBlob = await response.blob();
 		const imageUrl = URL.createObjectURL(imageBlob);
 
-		// Update image url
 		setImageUrl(imageUrl);
 
-		// Update loading state if needed
 		if (updateLoadingState) {
 			setLoading(false);
 		}
 
-		// Cache image if needed
 		if (cacheImage) {
 			const arrayBuffer = await imageBlob.arrayBuffer();
 			editedImagesDB.put({
