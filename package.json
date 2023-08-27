@@ -39,7 +39,7 @@
   },
   "jest": {
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
+      "^@/(.+)$": "<rootDir>/src/$1"
     }
   },
   "browserslist": {
@@ -60,6 +60,11 @@
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-prettier": "^9.0.0",
+    "fake-indexeddb": "^4.0.2",
+    "msw": "^1.2.4",
     "prettier": "3.0.2"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }
