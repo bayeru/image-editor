@@ -34,7 +34,7 @@ export default function ImageViewer({ loading, imageUrl }: ImageViewerProps) {
 					position: 'absolute',
 					left: '50%',
 					top: '50%',
-					transform: 'translateX(-50%) translateY(-50%)',
+					transform: 'translateX(-50%) translateY(-50%)',	
 					opacity: loading ? 0.3 : 1,
 				}}
 			/>
