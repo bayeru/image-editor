@@ -9,7 +9,7 @@ import { loader as editorLoader } from '@/loaders/editor-loader';
 import LoadingScreen from './components/LoadingScreen';
 import Error from './components/Error';
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			staleTime: 1000 * 60 * 5,
@@ -17,17 +17,17 @@ const queryClient = new QueryClient({
 	},
 });
 
-const router = createBrowserRouter(
-	createRoutesFromElements(
-		<>
-			<Route path="/" element={<MainLayout />} errorElement={<Error />}>
-				<Route path="/" element={<Navigate to="/images?page=1" replace={true} />} />
-				<Route path="/images" element={<Home />} loader={homeLoader(queryClient)} />
-				<Route path="/images/:imageId/edit" element={<Editor />} loader={editorLoader(queryClient)} />
-			</Route>
-		</>
-	)
+export const routes = createRoutesFromElements(
+	<>
+		<Route path="/" element={<MainLayout />} errorElement={<Error />}>
+			<Route path="/" element={<Navigate to="/images?page=1" replace={true} />} />
+			<Route path="/images" element={<Home />} loader={homeLoader(queryClient)} />
+			<Route path="/images/:imageId/edit" element={<Editor />} loader={editorLoader(queryClient)} />
+		</Route>
+	</>
 );
+
+const router = createBrowserRouter(routes);
 
 function App() {
 	return (

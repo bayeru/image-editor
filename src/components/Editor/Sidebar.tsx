@@ -61,6 +61,7 @@ export default function Sidebar(props: SidebarProps) {
 						<Typography id="blur-slider">Blur</Typography>
 						<Slider
 							aria-label="blur-slider"
+							data-testid="blur-slider"
 							valueLabelDisplay="auto"
 							value={imageState.blur}
 							getAriaValueText={function valuetext(value: number) {
