@@ -1,9 +1,10 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { queryClient, routes } from '@/App';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import 'fake-indexeddb/auto';
 import userEvent from '@testing-library/user-event';
+import { routes } from "@/routes/routes";
+import { queryClient } from "@/common/query-client";
 
 describe('Editor', () => {
 	global.scrollTo = jest.fn();
