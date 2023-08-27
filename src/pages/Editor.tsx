@@ -121,14 +121,12 @@ export default function Editor() {
 	const handleDownload = async () => {
 		const filename = `${imageState.author.toLowerCase().replace(' ', '-')}-${imageState.id}.jpg`;
 
-		// If the image url is not a blob, fetch the image and then download it
 		if (!imageUrl.includes('blob')) {
 			const newBlobUrl = await fetchImage(imageState, false, false);
 			saveAs(newBlobUrl, filename);
 			return;
 		}
 
-		// Just download the blob
 		saveAs(imageUrl, filename);
 	};
 
